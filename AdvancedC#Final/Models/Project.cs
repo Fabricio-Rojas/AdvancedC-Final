@@ -17,10 +17,10 @@ namespace AdvancedC_Final.Models
 
         public HashSet<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
 
-        public HashSet<TaskManagerUser> Developers { get; set; } = new HashSet<TaskManagerUser>();
+        public HashSet<DeveloperProject> Developers { get; set; } = new HashSet<DeveloperProject>();
 
         [DisplayName("Project Manager Id")]
-        public int ProjectManagerId { get; set; }
+        public string ProjectManagerId { get; set; }
 
         [ForeignKey("ProjectManagerId")]
         public TaskManagerUser? ProjectManager { get; set; }
