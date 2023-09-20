@@ -1,4 +1,5 @@
 ﻿using AdvancedC_Final.Areas.Identity.Data;
+using AdvancedC_Final.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,4 +20,7 @@ public class TaskManagerContext : IdentityDbContext<TaskManagerUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
+
+    public DbSet<Ticket> Tickets { get; set; } = default!;
+    public DbSet<DeveloperTicket> DeveloperTickets { get; set; } = default!;
 }
