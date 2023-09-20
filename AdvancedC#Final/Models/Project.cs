@@ -19,10 +19,11 @@ namespace AdvancedC_Final.Models
 
         public HashSet<DeveloperProject> Developers { get; set; } = new HashSet<DeveloperProject>();
 
+        // ask about nullability
         [DisplayName("Project Manager Id")]
         public string ProjectManagerId { get; set; }
 
         [ForeignKey("ProjectManagerId")]
-        public TaskManagerUser? ProjectManager { get; set; }
+        public TaskManagerUser ProjectManager { get; set; }
     }
 }

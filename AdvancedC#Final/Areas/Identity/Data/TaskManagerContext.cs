@@ -23,5 +23,6 @@ public class TaskManagerContext : IdentityDbContext<TaskManagerUser>
 
     public DbSet<Ticket> Tickets { get; set; } = default!;
     public DbSet<DeveloperTicket> DeveloperTickets { get; set; } = default!;
-    protected DbSet<Project> Projects { get; set; } = default!;
+    public DbSet<Project> Projects { get; set; } = default!;
+    public DbSet<DeveloperProject> DeveloperProjects { get; set;} = default!;
 }

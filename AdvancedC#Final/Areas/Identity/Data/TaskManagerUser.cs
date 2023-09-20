@@ -11,6 +11,7 @@ namespace AdvancedC_Final.Areas.Identity.Data;
 public class TaskManagerUser : IdentityUser
 {
     public HashSet<DeveloperTicket> Tickets { get; set; } = new HashSet<DeveloperTicket>();
-    public HashSet<Project> Projects { get; set; } = new HashSet<Project>();
+    public HashSet<DeveloperProject> DeveloperProjects { get; set; } = new HashSet<DeveloperProject>();
+    public HashSet<Project> ManagerProjects { get; set; } = new HashSet<Project>();
 }
 
