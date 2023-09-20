@@ -15,15 +15,14 @@ namespace AdvancedC_Final.Models
         [MaxLength(200, ErrorMessage = "Title has a limit of 200 characters.")]
         public string Title { get; set; }
 
-        public HashSet<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
-
-        public HashSet<DeveloperProject> Developers { get; set; } = new HashSet<DeveloperProject>();
-
-        // ask about nullability
+        [Required]
         [DisplayName("Project Manager Id")]
         public string ProjectManagerId { get; set; }
 
         [ForeignKey("ProjectManagerId")]
         public TaskManagerUser ProjectManager { get; set; }
+
+        public HashSet<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
+        public HashSet<DeveloperProject> Developers { get; set; } = new HashSet<DeveloperProject>();
     }
 }
