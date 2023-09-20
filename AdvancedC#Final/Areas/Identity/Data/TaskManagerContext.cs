@@ -21,6 +21,7 @@ public class TaskManagerContext : IdentityDbContext<TaskManagerUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
 
+    public DbSet<Ticket> Tickets { get; set; } = default!;
+    public DbSet<DeveloperTicket> DeveloperTickets { get; set; } = default!;
     protected DbSet<Project> Projects { get; set; } = default!;
 }
-    

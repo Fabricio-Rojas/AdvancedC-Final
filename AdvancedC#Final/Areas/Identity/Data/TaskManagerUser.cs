@@ -10,6 +10,7 @@ namespace AdvancedC_Final.Areas.Identity.Data;
 // Add profile data for application users by adding properties to the TaskManagerUser class
 public class TaskManagerUser : IdentityUser
 {
-    HashSet<Project> Projects { get; set; }
+    public HashSet<DeveloperTicket> Tickets { get; set; } = new HashSet<DeveloperTicket>();
+    public HashSet<Project> Projects { get; set; } = new HashSet<Project>();
 }
 
