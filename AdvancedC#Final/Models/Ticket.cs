@@ -36,7 +36,7 @@ namespace AdvancedC_Final.Models
         [ForeignKey(nameof(ProjectId))]
         public Project Project { get; set; }
 
-        public HashSet<DeveloperTicket> Developers { get; set; }
+        public HashSet<DeveloperTicket> Developers { get; set; } = new HashSet<DeveloperTicket>();
     }
     public enum Priority
     {
