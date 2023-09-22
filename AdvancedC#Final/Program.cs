@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AdvancedC_Final.Data;
 using AdvancedC_Final.Areas.Identity.Data;
+using AdvancedC_Final.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TaskManagerContextConnection") ?? throw new InvalidOperationException("Connection string 'TaskManagerContextConnection' not found.");
@@ -51,6 +52,10 @@ using (IServiceScope scope = app.Services.CreateScope())
     TaskManagerContext context = services.GetRequiredService<TaskManagerContext>();
     context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
+    UserManager<TaskManagerUser> userManager = services.GetRequiredService<UserManager<TaskManagerUser>>();
+    RoleManager<IdentityRole> roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    DbInitializer.SeedData(context, userManager, roleManager).Wait(); 
 }
 
 app.Run();
