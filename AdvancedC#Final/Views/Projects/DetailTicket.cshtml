@@ -1,0 +1,31 @@
+﻿@model AdvancedC_Final.Models.Ticket
+
+<h2>Ticket Details</h2>
+
+<dl>
+    <dt>Title:</dt>
+    <dd>@Model.Title</dd>
+
+    <dt>Priority:</dt>
+    <dd>@Model.Priority</dd>
+
+    <dt>Required Hours:</dt>
+    <dd>@Model.RequiredHours</dd>
+
+    <dt>Completed:</dt>
+    <dd>@Model.IsCompleted</dd>
+
+</dl>
+
+<h3>Developers</h3>
+
+<div>
+    @foreach (DeveloperTicket developer in Model.Developers)
+    {
+        <p>@developer.User.UserName</p>
+    }
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.ProjectId">Back to Project</a>
+</div>
