@@ -246,7 +246,7 @@ namespace AdvancedC_Final.Controllers
             return View(ticket);
         }
 
-        // GET: Project/DetailTicket
+        // GET: Projects/DetailTicket
         public async Task<IActionResult> DetailTicket(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -264,6 +264,14 @@ namespace AdvancedC_Final.Controllers
             }
             return View(ticket);
         }
+
+        // GET: Projects/AddDevProject
+
+        // POST: Projects/AddDevProject
+
+        // GET: Projects/AddDevTicket
+
+        // POST: Projects/AddDevTicket
 
         private bool ProjectExists(int id)
         {
