@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AdvancedC_Final.Data;
 using AdvancedC_Final.Areas.Identity.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TaskManagerContextConnection") ?? throw new InvalidOperationException("Connection string 'TaskManagerContextConnection' not found.");
 
@@ -9,6 +10,7 @@ builder.Services.AddDbContext<TaskManagerContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<TaskManagerUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TaskManagerContext>();
 
 // Add services to the container.
@@ -33,7 +35,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication();
 
 app.UseAuthorization();
 
@@ -42,5 +44,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    IServiceProvider services = scope.ServiceProvider;
+    TaskManagerContext context = services.GetRequiredService<TaskManagerContext>();
+    context.Database.EnsureDeleted();
+    context.Database.EnsureCreated();
+}
 
 app.Run();

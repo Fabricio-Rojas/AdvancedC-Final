@@ -10,16 +10,14 @@ namespace AdvancedC_Final.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Developer Id is required.")]
+        [ForeignKey(nameof(Developer))]
         public string DeveloperId { get; set; }
-
-        [ForeignKey("DeveloperId")]
         public TaskManagerUser Developer { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Project Id is required.")]
+        [ForeignKey(nameof(Project))]
         public int ProjectId { get; set; }
-
-        [ForeignKey("ProjectId")]
         public Project Project { get; set; }
     }
 }

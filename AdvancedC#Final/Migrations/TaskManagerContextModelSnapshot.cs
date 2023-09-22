@@ -108,7 +108,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("DeveloperProjects");
+                    b.ToTable("DeveloperProjects", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedC_Final.Models.DeveloperTicket", b =>
@@ -132,7 +132,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DeveloperTickets");
+                    b.ToTable("DeveloperTickets", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedC_Final.Models.Project", b =>
@@ -156,7 +156,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("ProjectManagerId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedC_Final.Models.Ticket", b =>
@@ -188,7 +188,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

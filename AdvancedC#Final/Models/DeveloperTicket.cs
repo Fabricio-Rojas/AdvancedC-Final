@@ -1,4 +1,5 @@
 ﻿using AdvancedC_Final.Areas.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,15 +11,13 @@ namespace AdvancedC_Final.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "User Id is required.")]
+        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
-
-        [ForeignKey(nameof(UserId))]
         public TaskManagerUser User { get; set; }
 
         [Required(ErrorMessage = "Ticked Id is required.")]
+        [ForeignKey(nameof(Ticket))]
         public int TickedId { get; set; }
-
-        [ForeignKey(nameof(TickedId))]
         public Ticket Ticket { get; set; }
     }
 }
