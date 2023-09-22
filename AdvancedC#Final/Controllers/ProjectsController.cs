@@ -45,6 +45,7 @@ namespace AdvancedC_Final.Controllers
                 .Include(p => p.ProjectManager)
                 .Include(p => p.Tickets)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (project == null)
             {
                 return NotFound();

@@ -43,7 +43,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Ticket ticket in Model.Tickets)
+            @foreach (Ticket ticket in Model.Tickets.OrderBy(p => p.Title))
             {
                 <tr>
                     <td>@ticket.Title</td>
