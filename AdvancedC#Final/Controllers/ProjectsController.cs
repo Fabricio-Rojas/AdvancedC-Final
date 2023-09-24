@@ -266,8 +266,64 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/AddDevProject
+        public async Task<IActionResult> AddDevProject(int? id)
+        {
+            if (id == null || _context.Projects == null)
+            {
+                return NotFound();
+            }
+
+            Project? project = await _context.Projects
+                .Include(p => p.ProjectManager)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            DeveloperProject addDeveloper = new DeveloperProject
+            {
+                ProjectId = project.Id
+            };
+
+            var allDevelopers = await _userManager.GetUsersInRoleAsync("developer");
+
+            return View(addDeveloper, allDevelopers);
+        }
 
         // POST: Projects/AddDevProject
+
+        [HttpPost, ActionName("AddTicket")]
+        [ValidateAntiForgeryToken]
+        // [Authorize(Roles = "Project Manager")]
+        public async Task<IActionResult> AddDevProject([Bind("Id, DeveloperId, ProjectId")] DeveloperProject developerProject)
+        {
+            developerProject.Id = default;
+            TryValidateModel(developerProject);
+            if (ModelState.IsValid)
+            {
+                Project? project = await _context.Projects
+                    .Include(p => p.Tickets)
+                    .FirstOrDefaultAsync(p => p.Id == developerProject.ProjectId);
+
+                if (project == null)
+                {
+                    return NotFound();
+                }
+
+                _context.DeveloperProjects.Add(developerProject);
+
+                developerProject.Project = project;
+
+                project.Developers.Add(developerProject);
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", "Projects", new { id = developerProject.ProjectId });
+            }
+            return View(developerProject);
+        }
 
         // GET: Projects/AddDevTicket
 

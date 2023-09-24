@@ -1,5 +1,24 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model AdvancedC_Final.Models.DeveloperProject
 @{
+    ViewData["Title"] = "Add Developer to Project";
 }
+
+<h1>Add Developer to Project</h1>
+
+<form asp-action="AddDevProject">
+    <input type="hidden" asp-for="ProjectId" />
+
+    <div class="form-group">
+        <label asp-for="DeveloperId"></label>
+        <select asp-for="DeveloperId" class="form-control">
+            <option value="">Select a developer</option>
+            @foreach (var developer in Model)
+            {
+                <option value="@developer.Id">@developer.UserName</option>
+            }
+        </select>
+        <span asp-validation-for="DeveloperId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Developer</button>
+</form>
