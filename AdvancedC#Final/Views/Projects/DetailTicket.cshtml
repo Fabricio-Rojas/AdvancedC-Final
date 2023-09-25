@@ -1,5 +1,10 @@
 ﻿@model AdvancedC_Final.Models.Ticket
 
+@{
+    ViewData["Title"] = "Ticket Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <h2>Ticket Details</h2>
 
 <dl>
@@ -17,15 +22,26 @@
 
 </dl>
 
-<h3>Developers</h3>
-
 <div>
-    @foreach (DeveloperTicket developer in Model.Developers)
-    {
-        <p>@developer.User.UserName</p>
-    }
+    <h4>Developers in Ticket</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Developer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DeveloperTicket developer in Model.Developers)
+            {
+                <tr>
+                    <td>@developer.User.UserName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.ProjectId">Back to Project</a>
+    <a asp-action="AddDevTicket" asp-controller="Manager" asp-route-id="@Model?.Id">Add a Developer</a> |
+    <a asp-action="Details" asp-controller="Projects" asp-route-id="@Model?.ProjectId">Back to Project</a>
 </div>

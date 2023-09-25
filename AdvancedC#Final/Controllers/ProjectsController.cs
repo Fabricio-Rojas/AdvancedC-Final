@@ -10,6 +10,7 @@ using AdvancedC_Final.Models;
 using Microsoft.AspNetCore.Identity;
 using AdvancedC_Final.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -44,6 +45,8 @@ namespace AdvancedC_Final.Controllers
             Project? project = await _context.Projects
                 .Include(p => p.ProjectManager)
                 .Include(p => p.Tickets)
+                .Include(p => p.Developers)
+                .ThenInclude(d => d.Developer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (project == null)
@@ -256,6 +259,7 @@ namespace AdvancedC_Final.Controllers
 
             Ticket? ticket = await _context.Tickets
                 .Include(p => p.Developers)
+                .ThenInclude(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ticket == null)
@@ -264,15 +268,6 @@ namespace AdvancedC_Final.Controllers
             }
             return View(ticket);
         }
-
-        // GET: Projects/AddDevProject
-
-        // POST: Projects/AddDevProject
-
-        // GET: Projects/AddDevTicket
-
-        // POST: Projects/AddDevTicket
-
         private bool ProjectExists(int id)
         {
           return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();
