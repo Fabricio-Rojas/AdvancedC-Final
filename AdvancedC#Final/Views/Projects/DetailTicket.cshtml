@@ -23,13 +23,22 @@
 </dl>
 
 <div>
-    <h3>Developers in Project:</h3>
-    <div>
-        @foreach (DeveloperTicket developer in Model.Developers)
-        {
-            <p>@developer.User.UserName</p>
-        }
-    </div>
+    <h4>Developers in Ticket</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Developer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DeveloperTicket developer in Model.Developers)
+            {
+                <tr>
+                    <td>@developer.User.UserName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 <div>

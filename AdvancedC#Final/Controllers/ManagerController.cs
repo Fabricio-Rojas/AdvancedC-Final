@@ -21,52 +21,6 @@ namespace AdvancedC_Final.Controllers
             _userManager = userManager;
         }
 
-        // GET: ManagerController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: ManagerController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddDevProject(string[] devIds, int projectId)
-        {
-            return View();
-        }
-
-        public IActionResult AddDevTicket(int ticketId)
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddDevTicket(string[] devIds, int ticketId)
-        {
-            return View();
-        }
-
-        // POST: ManagerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: Projects/AddDevProject
         public async Task<IActionResult> AddDevProject(int? id)
         {

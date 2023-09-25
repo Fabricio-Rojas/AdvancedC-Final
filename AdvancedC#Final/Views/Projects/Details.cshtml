@@ -58,13 +58,22 @@
 </div>
 
 <div>
-    <h3>Developers in Project:</h3>
-    <div>
-        @foreach (DeveloperProject developer in Model.Developers)
-        {
-            <p>@developer.Developer.UserName</p>
-        }
-    </div>
+    <h4>Developers in Project</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Developer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DeveloperProject developer in Model.Developers)
+            {
+                <tr>
+                    <td>@developer.Developer.UserName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 <div>

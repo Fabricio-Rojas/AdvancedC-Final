@@ -45,6 +45,8 @@ namespace AdvancedC_Final.Controllers
             Project? project = await _context.Projects
                 .Include(p => p.ProjectManager)
                 .Include(p => p.Tickets)
+                .Include(p => p.Developers)
+                .ThenInclude(d => d.Developer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (project == null)
@@ -257,6 +259,7 @@ namespace AdvancedC_Final.Controllers
 
             Ticket? ticket = await _context.Tickets
                 .Include(p => p.Developers)
+                .ThenInclude(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ticket == null)
