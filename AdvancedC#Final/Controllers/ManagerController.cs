@@ -33,50 +33,21 @@ namespace AdvancedC_Final.Controllers
             return View();
         }
 
-        // GET: ManagerController/Create
-        public ActionResult Create()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddDevProject(string[] devIds, int projectId)
         {
             return View();
         }
 
-        // POST: ManagerController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ManagerController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult AddDevTicket(int ticketId)
         {
             return View();
         }
 
-        // POST: ManagerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ManagerController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> AddDevTicket(string[] devIds, int ticketId)
         {
             return View();
         }
