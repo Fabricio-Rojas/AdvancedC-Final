@@ -1,85 +1,60 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using AdvancedC_Final.Data;
+using Microsoft.AspNetCore.Identity;
+using AdvancedC_Final.Areas.Identity.Data;
 
 namespace AdvancedC_Final.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public class AdministratorController : Controller
     {
-        // GET: AdministratorController
-        public ActionResult Index()
+        private readonly TaskManagerContext _context;
+        private readonly UserManager<TaskManagerUser> _userManager;
+
+        public AdministratorController(
+            TaskManagerContext context,
+            UserManager<TaskManagerUser> userManager)
         {
-            return View();
+            _context = context;
+            _userManager = userManager;
         }
 
-        // GET: AdministratorController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult SetUserRole()
         {
-            return View();
+            List<TaskManagerUser> usersWithoutRoles = _userManager.Users
+                .ToList()
+                .Where(u => !_userManager.GetRolesAsync(u).Result.Any())
+                .ToList();
+
+            return View(usersWithoutRoles);
         }
 
-        // GET: AdministratorController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdministratorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> SetUserRole(string userId, string roleName)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            string mgmtRole = "Project Manager";
+            string devRole = "Developer";
 
-        // GET: AdministratorController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            TaskManagerUser user = await _userManager.FindByIdAsync(userId);
 
-        // POST: AdministratorController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            if (roleName == "manager")
             {
-                return RedirectToAction(nameof(Index));
+                if (!await _userManager.IsInRoleAsync(user, mgmtRole))
+                {
+                    await _userManager.AddToRoleAsync(user, mgmtRole);
+                }
             }
-            catch
+            else if (roleName == "developer")
             {
-                return View();
+                if (!await _userManager.IsInRoleAsync(user, devRole))
+                {
+                    await _userManager.AddToRoleAsync(user, devRole);
+                }
             }
-        }
-
-        // GET: AdministratorController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdministratorController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(SetUserRole));
         }
     }
 }

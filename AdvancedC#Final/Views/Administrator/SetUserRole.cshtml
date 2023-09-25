@@ -1,5 +1,19 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using AdvancedC_Final.Areas.Identity.Data;
+@model List<TaskManagerUser>;
+
+<h1 class="text-center">
+    Set User Roles
+</h1>
+<form asp-action="SetUserRole" class="d-flex flex-column align-items-center">
+    <div class="">
+        <button type="submit" class="btn btn-primary" name="roleName" value="manager">Add as Manager</button>
+        <button type="submit" class="btn btn-primary" name="roleName" value="developer">Add as Developer</button>
+    </div>
+    <select class="form-select w-25 m-2" name="userId">
+        <option value="">- Select a User -</option>
+        @foreach (TaskManagerUser user in Model)
+        {
+            <option value="@user.Id">@user.UserName</option>
+        }
+    </select>
+</form>
