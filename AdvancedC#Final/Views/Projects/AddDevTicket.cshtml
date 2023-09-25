@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using AdvancedC_Final.Areas.Identity.Data;
+@model AdvancedC_Final.Models.DeveloperTicket
+
 @{
+    ViewData["Title"] = "Add Developer to Ticket";
 }
+
+<h4 class="mt-5">Add Developer to Ticket</h4>
+
+<form asp-action="AddDevTicket">
+    <div class="form-group">
+        <input type="hidden" asp-for="TickedId" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UserId" class="control-label">Select a Developer</label>
+        <select asp-for="UserId" class="form-control">
+            @if (ViewBag.Developers != null)
+            {
+                foreach (TaskManagerUser developer in ViewBag.Developers)
+                {
+                    <option value="@developer.Id">@developer.UserName</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <div class="mt-4">
+        <input type="submit" value="Add Developer" class="btn btn-success" />
+        <a asp-action="Details" asp-route-id="@Model.TickedId" class="btn btn-secondary ms-2">Back to Ticket</a>
+    </div>
+</form>

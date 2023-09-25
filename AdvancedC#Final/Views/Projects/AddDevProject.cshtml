@@ -1,24 +1,33 @@
-﻿@model AdvancedC_Final.Models.DeveloperProject
+﻿@using AdvancedC_Final.Areas.Identity.Data;
+@model AdvancedC_Final.Models.DeveloperProject
+
 @{
     ViewData["Title"] = "Add Developer to Project";
 }
 
-<h1>Add Developer to Project</h1>
+<h4 class="mt-5">Add Developer to Project</h4>
 
 <form asp-action="AddDevProject">
-    <input type="hidden" asp-for="ProjectId" />
+    <div class="form-group">    
+        <input type="hidden" asp-for="ProjectId" />
+    </div>
 
     <div class="form-group">
-        <label asp-for="DeveloperId"></label>
+        <label asp-for="DeveloperId" class="control-label">Select a Developer</label>
         <select asp-for="DeveloperId" class="form-control">
-            <option value="">Select a developer</option>
-            @foreach (var developer in Model)
+            @if (ViewBag.Developers != null)
             {
-                <option value="@developer.Id">@developer.UserName</option>
+                foreach (TaskManagerUser developer in ViewBag.Developers)
+                {
+                    <option value="@developer.Id">@developer.UserName</option>
+                }
             }
         </select>
         <span asp-validation-for="DeveloperId" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Add Developer</button>
+    <div class="mt-4">
+        <input type="submit" value="Add Developer" class="btn btn-success" />
+        <a asp-action="Details" asp-route-id="@Model.ProjectId" class="btn btn-secondary ms-2">Back to Project</a>
+    </div>
 </form>

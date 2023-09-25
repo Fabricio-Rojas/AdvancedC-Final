@@ -27,5 +27,6 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.ProjectId">Back to Project</a>
+    <a asp-action="AddDevTicket" asp-route-id="@Model?.Id">Add a Developer</a> |
+    <a asp-action="Details" asp-route-id="@Model?.ProjectId">Back to Project</a>
 </div>

@@ -10,6 +10,7 @@ using AdvancedC_Final.Models;
 using Microsoft.AspNetCore.Identity;
 using AdvancedC_Final.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -273,28 +274,27 @@ namespace AdvancedC_Final.Controllers
                 return NotFound();
             }
 
-            Project? project = await _context.Projects
-                .Include(p => p.ProjectManager)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            Project? project = await _context.Projects.FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
                 return NotFound();
             }
 
-            DeveloperProject addDeveloper = new DeveloperProject
+            List<TaskManagerUser> developers = (List<TaskManagerUser>)await _userManager.GetUsersInRoleAsync("Developer");
+
+            ViewBag.Developers = developers;
+
+            DeveloperProject developerProject = new DeveloperProject
             {
                 ProjectId = project.Id
             };
 
-            var allDevelopers = await _userManager.GetUsersInRoleAsync("developer");
-
-            return View(addDeveloper, allDevelopers);
+            return View("AddDevProject", developerProject);
         }
 
         // POST: Projects/AddDevProject
 
-        [HttpPost, ActionName("AddTicket")]
+        [HttpPost, ActionName("AddDevProject")]
         [ValidateAntiForgeryToken]
         // [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> AddDevProject([Bind("Id, DeveloperId, ProjectId")] DeveloperProject developerProject)
@@ -304,7 +304,6 @@ namespace AdvancedC_Final.Controllers
             if (ModelState.IsValid)
             {
                 Project? project = await _context.Projects
-                    .Include(p => p.Tickets)
                     .FirstOrDefaultAsync(p => p.Id == developerProject.ProjectId);
 
                 if (project == null)
@@ -327,7 +326,58 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects/AddDevTicket
 
+        public async Task<IActionResult> AddDevTicket(int? id)
+        {
+            if (id == null || _context.Tickets == null)
+            {
+                return NotFound();
+            }
+
+            Ticket? ticket = await _context.Tickets.FirstOrDefaultAsync(m => m.Id == id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            List<TaskManagerUser> developers = (List<TaskManagerUser>)await _userManager.GetUsersInRoleAsync("Developer");
+
+            ViewBag.Developers = developers;
+
+            DeveloperTicket developerTicket = new DeveloperTicket
+            {
+                TickedId = ticket.Id
+            };
+
+            return View("AddDevTicket", developerTicket);
+        }
+
         // POST: Projects/AddDevTicket
+        public async Task<IActionResult> AddDevTicket([Bind("Id, UserId, TickedId")] DeveloperTicket developerTicket)
+        {
+            developerTicket.Id = default;
+            TryValidateModel(developerTicket);
+            if (ModelState.IsValid)
+            {
+                Ticket? ticket = await _context.Tickets
+                    .FirstOrDefaultAsync(p => p.Id == developerTicket.TickedId);
+
+                if (ticket == null)
+                {
+                    return NotFound();
+                }
+
+                _context.DeveloperTickets.Add(developerTicket);
+
+                developerTicket.Ticket = ticket;
+
+                ticket.Developers.Add(developerTicket);
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", "Projects", new { id = developerTicket.TickedId });
+            }
+            return View(developerTicket);
+        }
 
         private bool ProjectExists(int id)
         {
