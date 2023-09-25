@@ -9,7 +9,7 @@ using AdvancedC_Final.Data;
 
 namespace AdvancedC_Final.Controllers
 {
-    // [Authorize(Roles = "Project Manager")]
+    [Authorize(Roles = "Project Manager")]
     public class ManagerController : Controller
     {
         private readonly TaskManagerContext _context;
@@ -22,6 +22,7 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/AddDevProject
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> AddDevProject(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -51,7 +52,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost, ActionName("AddDevProject")]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> AddDevProject([Bind("Id, DeveloperId, ProjectId")] DeveloperProject developerProject)
         {
             developerProject.Id = default;
@@ -80,6 +81,7 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/AddDevTicket
+        [Authorize(Roles = "Project Manager")]
 
         public async Task<IActionResult> AddDevTicket(int? id)
         {
@@ -109,7 +111,7 @@ namespace AdvancedC_Final.Controllers
         // POST: Projects/AddDevTicket
         [HttpPost, ActionName("AddDevTicket")]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> AddDevTicket([Bind("Id, UserId, TickedId")] DeveloperTicket developerTicket)
         {
             developerTicket.Id = default;

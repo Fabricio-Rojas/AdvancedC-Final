@@ -59,7 +59,7 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects/Create
 
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public IActionResult Create()
         {
             TaskManagerUser? loggedIn = _context.Users.FirstOrDefault(u => User.Identity.Name == u.UserName);
@@ -79,7 +79,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> Create([Bind("Id,Title,ProjectManagerId")] Project project)
         {
             if (ModelState.IsValid)
@@ -94,7 +94,7 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects/Edit
 
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -115,7 +115,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ProjectManagerId")] Project project)
         {
             if (id != project.Id)
@@ -149,7 +149,7 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects/Delete
 
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -172,7 +172,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Projects == null)
@@ -191,7 +191,7 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects/AddTicket
 
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> AddTicket(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -220,7 +220,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost, ActionName("AddTicket")]
         [ValidateAntiForgeryToken]
-        // [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> AddTicket([Bind("Id, Title, Priority, RequiredHours, ProjectId, IsCompleted")] Ticket ticket)
         {
             ticket.Id = default;
