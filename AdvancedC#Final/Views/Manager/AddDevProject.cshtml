@@ -1,20 +1,20 @@
 ﻿@using AdvancedC_Final.Areas.Identity.Data;
-@model AdvancedC_Final.Models.DeveloperTicket
+@model AdvancedC_Final.Models.DeveloperProject
 
 @{
-    ViewData["Title"] = "Add Developer to Ticket";
+    ViewData["Title"] = "Add Developer to Project";
 }
 
-<h4 class="mt-5">Add Developer to Ticket</h4>
+<h4 class="mt-5">Add Developer to Project</h4>
 
-<form asp-action="AddDevTicket">
+<form asp-action="AddDevProject">
     <div class="form-group">
-        <input type="hidden" asp-for="TickedId" />
+        <input type="hidden" asp-for="ProjectId" />
     </div>
 
     <div class="form-group">
-        <label asp-for="UserId" class="control-label">Select a Developer</label>
-        <select asp-for="UserId" class="form-control">
+        <label asp-for="DeveloperId" class="control-label">Select a Developer</label>
+        <select asp-for="DeveloperId" class="form-control">
             @if (ViewBag.Developers != null)
             {
                 foreach (TaskManagerUser developer in ViewBag.Developers)
@@ -23,11 +23,11 @@
                 }
             }
         </select>
-        <span asp-validation-for="UserId" class="text-danger"></span>
+        <span asp-validation-for="DeveloperId" class="text-danger"></span>
     </div>
 
     <div class="mt-4">
         <input type="submit" value="Add Developer" class="btn btn-success" />
-        <a asp-action="Details" asp-route-id="@Model.TickedId" class="btn btn-secondary ms-2">Back to Ticket</a>
+        <a asp-action="Details" asp-controller="Projects" asp-route-id="@Model.ProjectId" class="btn btn-secondary ms-2">Back to Ticket</a>
     </div>
 </form>

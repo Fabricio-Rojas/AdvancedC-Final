@@ -1,4 +1,5 @@
-﻿@model AdvancedC_Final.Models.Project
+﻿@using AdvancedC_Final.Areas.Identity.Data;
+@model AdvancedC_Final.Models.Project
 
 @{
     ViewData["Title"] = "Details";
@@ -57,8 +58,18 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="AddDevProject" asp-route-id="@Model?.Id">Add a Developer</a> |
-    <a asp-action="AddTicket" asp-route-id="@Model?.Id">Add a Ticket</a> |
-    <a asp-action="Index">Back to List</a>
+    <h3>Developers in Project:</h3>
+    <div>
+        @foreach (DeveloperProject developer in Model.Developers)
+        {
+            <p>@developer.Developer.UserName</p>
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-controller="Projects" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="AddDevProject" asp-controller="Manager" asp-route-id="@Model?.Id">Add a Developer</a> |
+    <a asp-action="AddTicket" asp-controller="Projects" asp-route-id="@Model?.Id">Add a Ticket</a> |
+    <a asp-action="Index" asp-controller="Projects" >Back to List</a>
 </div>
