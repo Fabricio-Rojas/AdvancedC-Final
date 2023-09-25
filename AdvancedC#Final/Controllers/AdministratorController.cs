@@ -33,26 +33,30 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetUserRole(string userId, string roleName)
+        public async Task<IActionResult> SetUserRole(string? userId, string roleName)
         {
             string mgmtRole = "Project Manager";
             string devRole = "Developer";
 
-            TaskManagerUser user = await _userManager.FindByIdAsync(userId);
+            if (userId != null)
+            {
+                TaskManagerUser user = await _userManager.FindByIdAsync(userId);
 
-            if (roleName == "manager")
-            {
-                if (!await _userManager.IsInRoleAsync(user, mgmtRole))
+                if (roleName == "manager")
                 {
-                    await _userManager.AddToRoleAsync(user, mgmtRole);
+                    if (!await _userManager.IsInRoleAsync(user, mgmtRole))
+                    {
+                        await _userManager.AddToRoleAsync(user, mgmtRole);
+                    }
                 }
-            }
-            else if (roleName == "developer")
-            {
-                if (!await _userManager.IsInRoleAsync(user, devRole))
+                else if (roleName == "developer")
                 {
-                    await _userManager.AddToRoleAsync(user, devRole);
+                    if (!await _userManager.IsInRoleAsync(user, devRole))
+                    {
+                        await _userManager.AddToRoleAsync(user, devRole);
+                    }
                 }
+                return RedirectToAction(nameof(SetUserRole));
             }
             return RedirectToAction(nameof(SetUserRole));
         }
