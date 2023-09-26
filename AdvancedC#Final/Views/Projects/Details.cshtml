@@ -39,16 +39,20 @@
     <table>
         <thead>
             <tr>
-                <th>Ticket</th>
+                <th>@Html.ActionLink("Title", "Details", new { sortOrder = ViewBag.TitleSortParm })</th>
+                <th>@Html.ActionLink("Priority", "Details", new { sortOrder = ViewBag.PrioritySortParm })</th>
+                <th>@Html.ActionLink("Hours", "Details", new { sortOrder = ViewBag.HoursSortParm })</th>
                 <th>Completed</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (Ticket ticket in Model.Tickets.OrderBy(p => p.Title))
+            @foreach (Ticket ticket in Model.Tickets)
             {
                 <tr>
                     <td>@ticket.Title</td>
+                    <td>@ticket.Priority</td>
+                    <td>@ticket.RequiredHours</td>
                     <td>@ticket.IsCompleted</td>
                     <td><a asp-action="DetailTicket" asp-route-id="@ticket.Id">Details</a></td>
                 </tr>

@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using X.PagedList.Mvc.Core;
 using X.PagedList;
+using Microsoft.Data.SqlClient;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -43,7 +44,7 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string sortOrder)
         {
             if (id == null || _context.Projects == null)
             {
@@ -57,11 +58,39 @@ namespace AdvancedC_Final.Controllers
                 .ThenInclude(d => d.Developer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+
             if (project == null)
             {
                 return NotFound();
             }
 
+            HashSet<Ticket> tickets = project.Tickets;
+
+            ViewBag.TitleSortParm = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
+            ViewBag.HoursSortParm = sortOrder == "Hours" ? "hours_desc" : "Hours";
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    tickets = tickets.OrderByDescending(t => t.Title).ToHashSet();
+                    break;
+                case "Priority":
+                    tickets = tickets.OrderBy(t => t.Priority).ToHashSet();
+                    break;
+                case "priority_desc":
+                    tickets = tickets.OrderByDescending(t => t.Priority).ToHashSet();
+                    break;
+                case "Hours":
+                    tickets = tickets.OrderBy(t => t.RequiredHours).ToHashSet();
+                    break;
+                case "hours_desc":
+                    tickets = tickets.OrderByDescending(t => t.RequiredHours).ToHashSet();
+                    break;
+                default:
+                    tickets = tickets.OrderBy(t => t.Title).ToHashSet();
+                    break;
+            }
             return View(project);
         }
 
