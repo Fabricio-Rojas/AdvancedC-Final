@@ -112,9 +112,13 @@ namespace AdvancedC_Final.Controllers
         [HttpPost, ActionName("AddDevTicket")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Project Manager")]
-        public async Task<IActionResult> AddDevTicket([Bind("Id, UserId, TickedId")] DeveloperTicket developerTicket)
+        public async Task<IActionResult> AddDevTicket([Bind("Id, UserId, TicketId")] DeveloperTicket developerTicket)
         {
-            developerTicket.Id = default;
+            if (developerTicket.Id != default)
+            {
+                developerTicket.TicketId = developerTicket.Id;
+                developerTicket.Id = default;
+            }
             TryValidateModel(developerTicket);
             if (ModelState.IsValid)
             {
