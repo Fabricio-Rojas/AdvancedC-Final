@@ -7,21 +7,40 @@
 
 <h2>Ticket Details</h2>
 
-<dl>
-    <dt>Title:</dt>
-    <dd>@Model.Title</dd>
-
-    <dt>Priority:</dt>
-    <dd>@Model.Priority</dd>
-
-    <dt>Required Hours:</dt>
-    <dd>@Model.RequiredHours</dd>
-
-    <dt>Completed:</dt>
-    <dd>@Model.IsCompleted</dd>
-
+<dl class="row">
+    <dt class="col-sm-2">
+        Title:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.Title
+    </dd>
+    <dt class ="col-sm-2">
+        Priority:
+    </dt>
+    <dd class="col-sm-10">
+        @Model.Priority
+    </dd>
+    <dt class="col-sm-2">
+        Required Hours:
+    </dt>
+    <dd class="col-sm-10">
+        <form asp-action="UpdateTicketHours" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="number" asp-for="RequiredHours" min="0" max="999" />
+            <button type="submit">Set new Required Hours</button>
+        </form>
+    </dd>
+    <dt class="col-sm-2">
+        Completed:
+    </dt>
+    <dd class="col-sm-10">
+        <form asp-action="UpdateTicketIsCompleted" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="checkbox" asp-for="IsCompleted" onchange="this.form.submit()"/>
+            <label asp-for="IsCompleted">@Model.IsCompleted</label>
+        </form>
+    </dd>
 </dl>
-
 <div>
     <h4>Developers in Ticket</h4>
     <table>
@@ -43,5 +62,11 @@
 
 <div>
     <a asp-action="AddDevTicket" asp-controller="Manager" asp-route-id="@Model?.Id">Add a Developer</a> |
-    <a asp-action="Details" asp-controller="Projects" asp-route-id="@Model?.ProjectId">Back to Project</a>
+    <a asp-action="Details" asp-controller="Projects" asp-route-id="@Model?.ProjectId">Back to Project</a> 
+    @if (User.IsInRole("Project Manager"))
+    {
+        <text>
+            | <a asp-action="EditTicket" asp-controller="Projects" asp-route-id="@Model?.Id">Edit</a>
+        </text>
+    }
 </div>

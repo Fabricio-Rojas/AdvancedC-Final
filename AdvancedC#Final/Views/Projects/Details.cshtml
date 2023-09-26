@@ -50,7 +50,15 @@
                 <tr>
                     <td>@ticket.Title</td>
                     <td>@ticket.IsCompleted</td>
-                    <td><a asp-action="DetailTicket" asp-route-id="@ticket.Id">Details</a></td>
+                    <td>
+                        <a asp-action="DetailTicket" asp-route-id="@ticket.Id">Details</a> 
+                        @if (User.IsInRole("Project Manager"))
+                        {
+                            <text>
+                                | <a asp-action="EditTicket" asp-route-id="@ticket.Id">Edit</a>
+                            </text>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

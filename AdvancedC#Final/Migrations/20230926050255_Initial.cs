@@ -230,7 +230,7 @@ namespace AdvancedC_Final.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TickedId = table.Column<int>(type: "int", nullable: false)
+                    TicketId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -242,8 +242,8 @@ namespace AdvancedC_Final.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DeveloperTickets_Tickets_TickedId",
-                        column: x => x.TickedId,
+                        name: "FK_DeveloperTickets_Tickets_TicketId",
+                        column: x => x.TicketId,
                         principalTable: "Tickets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -299,9 +299,9 @@ namespace AdvancedC_Final.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeveloperTickets_TickedId",
+                name: "IX_DeveloperTickets_TicketId",
                 table: "DeveloperTickets",
-                column: "TickedId");
+                column: "TicketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeveloperTickets_UserId",

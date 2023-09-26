@@ -9,7 +9,7 @@
 
 <form asp-action="AddDevTicket">
     <div class="form-group">
-        <input type="hidden" asp-for="TickedId" />
+        <input type="hidden" asp-for="TicketId" />
     </div>
 
     <div class="form-group">
@@ -28,6 +28,6 @@
 
     <div class="mt-4">
         <input type="submit" value="Add Developer" class="btn btn-success" />
-        <a asp-action="Details" asp-controller="Projects" asp-route-id="@Model.TickedId" class="btn btn-secondary ms-2">Back to Ticket</a>
+        <a asp-action="DetailTicket" asp-controller="Projects" asp-route-id="@Model.TicketId" class="btn btn-secondary ms-2">Back to Ticket</a>
     </div>
 </form>

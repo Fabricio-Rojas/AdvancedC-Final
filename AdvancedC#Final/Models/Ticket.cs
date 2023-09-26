@@ -21,7 +21,7 @@ namespace AdvancedC_Final.Models
         public Priority Priority { get; set; }
 
         [Required(ErrorMessage = "Required Hours is required.")]
-        [Range(0, int.MaxValue, ErrorMessage = "Cannot asign negative required hours")]
+        [Range(1, 999, ErrorMessage = "Cannot asign negative required hours")]
         [DisplayName("Required Hours")]
         public int RequiredHours { get; set; }
 

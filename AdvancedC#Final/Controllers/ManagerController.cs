@@ -102,7 +102,7 @@ namespace AdvancedC_Final.Controllers
 
             DeveloperTicket developerTicket = new DeveloperTicket
             {
-                TickedId = ticket.Id
+                TicketId = ticket.Id
             };
 
             return View("AddDevTicket", developerTicket);
@@ -119,7 +119,7 @@ namespace AdvancedC_Final.Controllers
             if (ModelState.IsValid)
             {
                 Ticket? ticket = await _context.Tickets
-                    .FirstOrDefaultAsync(p => p.Id == developerTicket.TickedId);
+                    .FirstOrDefaultAsync(p => p.Id == developerTicket.TicketId);
 
                 if (ticket == null)
                 {
@@ -134,7 +134,7 @@ namespace AdvancedC_Final.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Projects", new { id = developerTicket.TickedId });
+                return RedirectToAction("Details", "Projects", new { id = developerTicket.TicketId });
             }
             return View(developerTicket);
         }

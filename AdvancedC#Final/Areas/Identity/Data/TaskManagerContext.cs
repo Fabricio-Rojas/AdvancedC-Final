@@ -41,7 +41,7 @@ public class TaskManagerContext : IdentityDbContext<TaskManagerUser>
         builder.Entity<DeveloperTicket>()
             .HasOne(dp => dp.Ticket)
             .WithMany()
-            .HasForeignKey(dp => dp.TickedId)
+            .HasForeignKey(dp => dp.TicketId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 

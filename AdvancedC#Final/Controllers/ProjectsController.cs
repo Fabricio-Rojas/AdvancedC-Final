@@ -70,8 +70,6 @@ namespace AdvancedC_Final.Controllers
                 ProjectManagerId = currentUserId
             };
 
-
-            ViewData["ProjectManagerId"] = new SelectList(_context.Users, "Id", "Id");
             return View(model);
         }
 
@@ -107,7 +105,6 @@ namespace AdvancedC_Final.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectManagerId"] = new SelectList(_context.Users, "Id", "Id", project.ProjectManagerId);
             return View(project);
         }
 
@@ -143,7 +140,6 @@ namespace AdvancedC_Final.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectManagerId"] = new SelectList(_context.Users, "Id", "Id", project.ProjectManagerId);
             return View(project);
         }
 
@@ -250,6 +246,7 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/DetailTicket
+        [Authorize(Roles = "Project Manager,Developer")]
         public async Task<IActionResult> DetailTicket(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -268,6 +265,75 @@ namespace AdvancedC_Final.Controllers
             }
             return View(ticket);
         }
+
+        [Authorize(Roles = "Project Manager")]
+        public IActionResult EditTicket(int? id)
+        {
+            if (id == null || _context.Tickets == null)
+            {
+                return NotFound();
+            }
+
+            Ticket? ticket = _context.Tickets.FirstOrDefault(t => t.Id == id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+            return View(ticket);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Project Manager")]
+        public IActionResult EditTicket(int id, [Bind("Id, Title, Priority, RequiredHours, ProjectId, IsCompleted")] Ticket ticket)
+        {
+            if (id != ticket.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(ticket);
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(DetailTicket), new { id = id });
+            }
+            return View(ticket);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateTicketHours(int id, int RequiredHours)
+        {
+            Ticket? ticket = _context.Tickets.FirstOrDefault(t => t.Id == id);
+
+            if (ticket != null && RequiredHours <= 999 && RequiredHours >= 0)
+            {
+                ticket.RequiredHours = RequiredHours;
+                _context.Update(ticket);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(DetailTicket), new { id = id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateTicketIsCompleted(int id)
+        {
+            Ticket? ticket = _context.Tickets.FirstOrDefault(t => t.Id == id);
+
+            if (ticket != null)
+            {
+                ticket.IsCompleted = !ticket.IsCompleted;
+                _context.Update(ticket);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(DetailTicket), new { id = id });
+        }
+
         private bool ProjectExists(int id)
         {
           return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();

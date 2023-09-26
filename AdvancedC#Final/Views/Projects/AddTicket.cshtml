@@ -23,7 +23,7 @@
     </div>
     <div class="form-group">
         <label asp-for="RequiredHours"></label>
-        <input asp-for="RequiredHours" class="form-control" />
+        <input asp-for="RequiredHours" class="form-control" min="0" max="999" />
         <span asp-validation-for="RequiredHours" class="text-danger"></span>
     </div>
 

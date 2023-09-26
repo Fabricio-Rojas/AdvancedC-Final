@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedC_Final.Migrations
 {
     [DbContext(typeof(TaskManagerContext))]
-    [Migration("20230920164948_Initial")]
+    [Migration("20230926050255_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,7 +121,7 @@ namespace AdvancedC_Final.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("TickedId")
+                    b.Property<int>("TicketId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -130,7 +130,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TickedId");
+                    b.HasIndex("TicketId");
 
                     b.HasIndex("UserId");
 
@@ -353,7 +353,7 @@ namespace AdvancedC_Final.Migrations
                 {
                     b.HasOne("AdvancedC_Final.Models.Ticket", "Ticket")
                         .WithMany("Developers")
-                        .HasForeignKey("TickedId")
+                        .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

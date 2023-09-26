@@ -15,9 +15,9 @@ namespace AdvancedC_Final.Models
         public string UserId { get; set; }
         public TaskManagerUser User { get; set; }
 
-        [Required(ErrorMessage = "Ticked Id is required.")]
+        [Required(ErrorMessage = "Ticket Id is required.")]
         [ForeignKey(nameof(Ticket))]
-        public int TickedId { get; set; }
+        public int TicketId { get; set; }
         public Ticket Ticket { get; set; }
     }
 }

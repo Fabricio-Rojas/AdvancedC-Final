@@ -108,7 +108,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("DeveloperProjects", (string)null);
+                    b.ToTable("DeveloperProjects");
                 });
 
             modelBuilder.Entity("AdvancedC_Final.Models.DeveloperTicket", b =>
@@ -119,7 +119,7 @@ namespace AdvancedC_Final.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("TickedId")
+                    b.Property<int>("TicketId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -128,11 +128,11 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TickedId");
+                    b.HasIndex("TicketId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DeveloperTickets", (string)null);
+                    b.ToTable("DeveloperTickets");
                 });
 
             modelBuilder.Entity("AdvancedC_Final.Models.Project", b =>
@@ -156,7 +156,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("ProjectManagerId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("AdvancedC_Final.Models.Ticket", b =>
@@ -188,7 +188,7 @@ namespace AdvancedC_Final.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -351,7 +351,7 @@ namespace AdvancedC_Final.Migrations
                 {
                     b.HasOne("AdvancedC_Final.Models.Ticket", "Ticket")
                         .WithMany("Developers")
-                        .HasForeignKey("TickedId")
+                        .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
