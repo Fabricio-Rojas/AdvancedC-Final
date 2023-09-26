@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Identity;
 using AdvancedC_Final.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using System.Net.NetworkInformation;
+using X.PagedList.Mvc.Core;
+using X.PagedList;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -28,10 +31,15 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? page)
         {
             var taskManagerContext = _context.Projects.Include(p => p.ProjectManager);
-            return View(await taskManagerContext.ToListAsync());
+
+            int pageNumber = (page ?? 1);
+            var onePage = taskManagerContext.ToPagedList(pageNumber, 10);
+
+            ViewBag.onePage = onePage;
+            return View(onePage);
         }
 
         // GET: Projects/Details/5

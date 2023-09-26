@@ -1,4 +1,8 @@
-﻿@model IEnumerable<AdvancedC_Final.Models.Project>
+﻿@using X.PagedList.Mvc;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model X.PagedList.IPagedList<AdvancedC_Final.Models.Project>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewData["Title"] = "Index";
@@ -13,39 +17,34 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectManager)
-            </th>
+            <th>Project</th>
+            <th>Project Manager</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (Project item in Model.OrderBy(p => p.Title))
         {
-            // Check if the current user is part of this project
-            // if (User.IsInRole("Project Manager") || User.IsInRole("Developer"))
+            if (User.Identity.Name == item.ProjectManager.UserName)
             {
-                // Checks for projects associated with the current user
-                if (User.Identity.Name == item.ProjectManager.UserName)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                        <td>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
                             @Html.DisplayFor(modelItem => item.ProjectManager.UserName)
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                             <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                             <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
+                     </td>
+                </tr>
             }
         }
     </tbody>
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager( (IPagedList)ViewBag.onePage, page => Url.Action("Index", new { page }) )
