@@ -29,8 +29,20 @@ namespace AdvancedC_Final.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var taskManagerContext = _context.Projects.Include(p => p.ProjectManager);
-            return View(await taskManagerContext.ToListAsync());
+            TaskManagerUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            List<Project> data = new List<Project>();
+
+            if (await _userManager.IsInRoleAsync(user, "Developer"))
+            {
+                data = _context.Projects.Include(p => p.ProjectManager).Where(p => p.Developers.Where(d => d.DeveloperId == user.Id).Any()).ToList();
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "Project Manager"))
+            {
+                data = _context.Projects.Include(p => p.ProjectManager).Where(p => p.ProjectManagerId == user.Id).ToList();
+            }
+            
+            return View(data);
         }
 
         // GET: Projects/Details/5
