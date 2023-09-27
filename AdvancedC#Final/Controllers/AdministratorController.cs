@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using AdvancedC_Final.Areas.Identity.Data;
 using AdvancedC_Final.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using AdvancedC_Final.Areas.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -21,12 +20,14 @@ namespace AdvancedC_Final.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult SetUserRole()
+        public IActionResult SetUserRole(string errorMessage = "")
         {
             List<TaskManagerUser> usersWithoutRoles = _userManager.Users
                 .ToList()
                 .Where(u => !_userManager.GetRolesAsync(u).Result.Any())
                 .ToList();
+
+            ViewBag.ErrorMessage = errorMessage;
 
             return View(usersWithoutRoles);
         }
@@ -58,7 +59,10 @@ namespace AdvancedC_Final.Controllers
                 }
                 return RedirectToAction(nameof(SetUserRole));
             }
-            return RedirectToAction(nameof(SetUserRole));
+
+            string errorMessage = "Please select a user.";
+
+            return RedirectToAction(nameof(SetUserRole), new { errorMessage = errorMessage });
         }
     }
 }
