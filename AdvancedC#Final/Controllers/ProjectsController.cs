@@ -45,7 +45,7 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id, string sortOrder, int? page)
+        public async Task<IActionResult> Details(int? id, int? page, string sortOrder = "Title")
         {
             if (id == null || _context.Projects == null)
             {
@@ -67,13 +67,17 @@ namespace AdvancedC_Final.Controllers
 
             HashSet<Ticket> tickets = project.Tickets;
 
-            ViewBag.TitleSortParm = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
             ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
-            ViewBag.HoursSortParm = sortOrder == "Required Hours" ? "hours_desc" : "Hours";
+            ViewBag.HoursSortParm = sortOrder == "Hours" ? "hours_desc" : "Hours";
+            ViewBag.CompletionFilter = sortOrder == "False" ? "" : "False";
 
             switch (sortOrder)
             {
-                case "name_desc":
+                case "Title":
+                    tickets = tickets.OrderBy(t => t.Title).ToHashSet();
+                    break;
+                case "title_desc":
                     tickets = tickets.OrderByDescending(t => t.Title).ToHashSet();
                     break;
                 case "Priority":
@@ -88,16 +92,16 @@ namespace AdvancedC_Final.Controllers
                 case "hours_desc":
                     tickets = tickets.OrderByDescending(t => t.RequiredHours).ToHashSet();
                     break;
-                default:
-                    tickets = tickets.OrderBy(t => t.Title).ToHashSet();
-                    break;   
+                case "False":
+                    tickets = tickets.Where(t => t.IsCompleted == false).ToHashSet();
+                    break;
             }
             project.Tickets = tickets;
 
             int pageNumber = page ?? 1;
             IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 10);
 
-            var viewModel = new TicketPageVM
+            TicketPageVM viewModel = new TicketPageVM
             {
                 Project = project,
                 Tickets = onePage
