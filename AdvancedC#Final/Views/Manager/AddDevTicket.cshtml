@@ -10,6 +10,7 @@
 <form asp-action="AddDevTicket">
     <div class="form-group">
         <input type="hidden" asp-for="TickedId" />
+        <input type="hidden" asp-for="Ticket.ProjectId" />
     </div>
 
     <div class="form-group">
@@ -17,9 +18,9 @@
         <select asp-for="UserId" class="form-control">
             @if (ViewBag.Developers != null)
             {
-                foreach (TaskManagerUser developer in ViewBag.Developers)
+                foreach (DeveloperProject dp in ViewBag.Developers)
                 {
-                    <option value="@developer.Id">@developer.UserName</option>
+                    <option value="@dp.DeveloperId">@dp.Developer.UserName</option>
                 }
             }
         </select>

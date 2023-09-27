@@ -38,6 +38,18 @@ namespace AdvancedC_Final.Controllers
 
             List<TaskManagerUser> developers = (List<TaskManagerUser>)await _userManager.GetUsersInRoleAsync("Developer");
 
+            foreach(TaskManagerUser user in developers)
+            {
+                foreach (DeveloperProject dp in project.Developers)
+                {
+                    if (user.Id == dp.DeveloperId)
+                    {
+                        developers.Remove(user);
+                        break;
+                    }
+                }
+            }
+
             ViewBag.Developers = developers;
 
             DeveloperProject developerProject = new DeveloperProject
@@ -83,20 +95,22 @@ namespace AdvancedC_Final.Controllers
         // GET: Projects/AddDevTicket
         [Authorize(Roles = "Project Manager")]
 
-        public async Task<IActionResult> AddDevTicket(int? id)
+        public async Task<IActionResult> AddDevTicket(int? ticketId, int? projectId)
         {
-            if (id == null || _context.Tickets == null)
+            if (ticketId == null || _context.Tickets == null || projectId == null || _context.Projects == null)
             {
                 return NotFound();
             }
 
-            Ticket? ticket = await _context.Tickets.FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
+            Ticket? ticket = await _context.Tickets.FirstOrDefaultAsync(m => m.Id == ticketId);
+            Project? project = await _context.Projects.Include(p => p.Developers).FirstOrDefaultAsync(m => m.Id == projectId);
+
+            if (ticket == null || project == null)
             {
                 return NotFound();
             }
 
-            List<TaskManagerUser> developers = (List<TaskManagerUser>)await _userManager.GetUsersInRoleAsync("Developer");
+            List<DeveloperProject> developers = project.Developers.ToList();
 
             ViewBag.Developers = developers;
 
