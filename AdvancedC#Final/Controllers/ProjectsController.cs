@@ -65,13 +65,16 @@ namespace AdvancedC_Final.Controllers
             TaskManagerUser? loggedIn = _context.Users.FirstOrDefault(u => User.Identity.Name == u.UserName);
             string currentUserId = loggedIn.Id;
 
+            HashSet<TaskManagerUser> developers = _context.Users.Where(u => User.IsInRole("Developer")).ToHashSet();
+
+            ViewBag.Developers = new MultiSelectList(developers, "Id", "Name");
+
             Project model = new Project()
             {
                 ProjectManagerId = currentUserId
             };
 
 
-            ViewData["ProjectManagerId"] = new SelectList(_context.Users, "Id", "Id");
             return View(model);
         }
 
@@ -88,7 +91,6 @@ namespace AdvancedC_Final.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectManagerId"] = new SelectList(_context.Users, "Id", "Id", project.ProjectManagerId);
             return View(project);
         }
 
