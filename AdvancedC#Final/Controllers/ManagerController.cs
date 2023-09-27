@@ -30,7 +30,7 @@ namespace AdvancedC_Final.Controllers
                 return NotFound();
             }
 
-            Project? project = await _context.Projects.FirstOrDefaultAsync(m => m.Id == id);
+            Project? project = await _context.Projects.Include(p => p.Developers).FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
                 return NotFound();
@@ -38,15 +38,11 @@ namespace AdvancedC_Final.Controllers
 
             List<TaskManagerUser> developers = (List<TaskManagerUser>)await _userManager.GetUsersInRoleAsync("Developer");
 
-            foreach(TaskManagerUser user in developers)
+            if (project.Developers.Count > 0)
             {
-                foreach (DeveloperProject dp in project.Developers)
+                foreach(DeveloperProject dp in project.Developers)
                 {
-                    if (user.Id == dp.DeveloperId)
-                    {
-                        developers.Remove(user);
-                        break;
-                    }
+                    developers.Remove(developers.FirstOrDefault(d => d.Id == dp.DeveloperId));
                 }
             }
 
@@ -73,8 +69,9 @@ namespace AdvancedC_Final.Controllers
             {
                 Project? project = await _context.Projects
                     .FirstOrDefaultAsync(p => p.Id == developerProject.ProjectId);
+                TaskManagerUser? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == developerProject.DeveloperId);
 
-                if (project == null)
+                if (project == null || user == null)
                 {
                     return NotFound();
                 }
@@ -82,6 +79,7 @@ namespace AdvancedC_Final.Controllers
                 _context.DeveloperProjects.Add(developerProject);
 
                 developerProject.Project = project;
+                developerProject.Developer = user;
 
                 project.Developers.Add(developerProject);
 
@@ -103,7 +101,7 @@ namespace AdvancedC_Final.Controllers
             }
 
             Ticket? ticket = await _context.Tickets.FirstOrDefaultAsync(m => m.Id == ticketId);
-            Project? project = await _context.Projects.Include(p => p.Developers).FirstOrDefaultAsync(m => m.Id == projectId);
+            Project? project = await _context.Projects.Include(p => p.Developers).ThenInclude(dp => dp.Developer).FirstOrDefaultAsync(m => m.Id == projectId);
 
             if (ticket == null || project == null)
             {
