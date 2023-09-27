@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Identity;
 using AdvancedC_Final.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using System.Net.NetworkInformation;
+using X.PagedList.Mvc.Core;
+using X.PagedList;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -28,14 +33,19 @@ namespace AdvancedC_Final.Controllers
 
         // GET: Projects
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? page)
         {
             var taskManagerContext = _context.Projects.Include(p => p.ProjectManager);
-            return View(await taskManagerContext.ToListAsync());
+
+            int pageNumber = page ?? 1;
+            var onePage = taskManagerContext.ToPagedList(pageNumber, 10);
+
+            ViewBag.onePage = onePage;
+            return View(onePage);
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string sortOrder, int? page)
         {
             if (id == null || _context.Projects == null)
             {
@@ -49,12 +59,51 @@ namespace AdvancedC_Final.Controllers
                 .ThenInclude(d => d.Developer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+
             if (project == null)
             {
                 return NotFound();
             }
 
-            return View(project);
+            HashSet<Ticket> tickets = project.Tickets;
+
+            ViewBag.TitleSortParm = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
+            ViewBag.HoursSortParm = sortOrder == "Required Hours" ? "hours_desc" : "Hours";
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    tickets = tickets.OrderByDescending(t => t.Title).ToHashSet();
+                    break;
+                case "Priority":
+                    tickets = tickets.OrderBy(t => t.Priority).ToHashSet();
+                    break;
+                case "priority_desc":
+                    tickets = tickets.OrderByDescending(t => t.Priority).ToHashSet();
+                    break;
+                case "Hours":
+                    tickets = tickets.OrderBy(t => t.RequiredHours).ToHashSet();
+                    break;
+                case "hours_desc":
+                    tickets = tickets.OrderByDescending(t => t.RequiredHours).ToHashSet();
+                    break;
+                default:
+                    tickets = tickets.OrderBy(t => t.Title).ToHashSet();
+                    break;   
+            }
+            project.Tickets = tickets;
+
+            int pageNumber = page ?? 1;
+            IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 10);
+
+            var viewModel = new TicketPageVM
+            {
+                Project = project,
+                Tickets = onePage
+            };
+
+            return View(viewModel);
         }
 
         // GET: Projects/Create

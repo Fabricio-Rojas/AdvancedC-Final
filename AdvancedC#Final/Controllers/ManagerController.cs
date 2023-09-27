@@ -138,7 +138,7 @@ namespace AdvancedC_Final.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Projects", new { id = developerTicket.TicketId });
+                return RedirectToAction("DetailTicket", "Projects", new { id = developerTicket.TicketId });
             }
             return View(developerTicket);
         }
