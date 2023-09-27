@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AdvancedC_Final.Areas.Identity.Data;
+using AdvancedC_Final.Data;
+using AdvancedC_Final.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AdvancedC_Final.Data;
-using AdvancedC_Final.Models;
-using Microsoft.AspNetCore.Identity;
-using AdvancedC_Final.Areas.Identity.Data;
-using Microsoft.AspNetCore.Authorization;
-using System.Net;
-using System.Net.NetworkInformation;
-using X.PagedList.Mvc.Core;
 using X.PagedList;
-using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -32,20 +23,32 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects
-
-        public IActionResult Index(int? page)
+        [Authorize(Roles = "Project Manager,Developer")]
+        public async Task<IActionResult> Index(int? page)
         {
-            var taskManagerContext = _context.Projects.Include(p => p.ProjectManager);
+            TaskManagerUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            List<Project> data = new List<Project>();
+
+            if (await _userManager.IsInRoleAsync(user, "Developer"))
+            {
+                data = _context.Projects.Include(p => p.ProjectManager).Where(p => p.Developers.Where(d => d.DeveloperId == user.Id).Any()).ToList();
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "Project Manager"))
+            {
+                data = _context.Projects.Include(p => p.ProjectManager).Where(p => p.ProjectManagerId == user.Id).ToList();
+            }
 
             int pageNumber = page ?? 1;
-            var onePage = taskManagerContext.ToPagedList(pageNumber, 10);
+            IPagedList<Project> onePage = data.ToPagedList(pageNumber, 10);
 
             ViewBag.onePage = onePage;
             return View(onePage);
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id, string sortOrder, int? page)
+        [Authorize(Roles = "Project Manager,Developer")]
+        public async Task<IActionResult> Details(int? id, int? page, string sortOrder = "Title")
         {
             if (id == null || _context.Projects == null)
             {
@@ -55,6 +58,7 @@ namespace AdvancedC_Final.Controllers
             Project? project = await _context.Projects
                 .Include(p => p.ProjectManager)
                 .Include(p => p.Tickets)
+                .ThenInclude(t => t.Developers)
                 .Include(p => p.Developers)
                 .ThenInclude(d => d.Developer)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -65,15 +69,28 @@ namespace AdvancedC_Final.Controllers
                 return NotFound();
             }
 
-            HashSet<Ticket> tickets = project.Tickets;
+            TaskManagerUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            HashSet<Ticket> tickets;
 
-            ViewBag.TitleSortParm = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            if (await _userManager.IsInRoleAsync(user, "Developer"))
+            {
+                tickets = project.Tickets.Where(t => t.Developers.Any(dt => dt.UserId == user.Id)).ToHashSet();
+            }
+            else
+            {
+                tickets = project.Tickets;
+            }
+
+            ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
             ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
-            ViewBag.HoursSortParm = sortOrder == "Required Hours" ? "hours_desc" : "Hours";
+            ViewBag.HoursSortParm = sortOrder == "Hours" ? "hours_desc" : "Hours";
 
             switch (sortOrder)
             {
-                case "name_desc":
+                case "Title":
+                    tickets = tickets.OrderBy(t => t.Title).ToHashSet();
+                    break;
+                case "title_desc":
                     tickets = tickets.OrderByDescending(t => t.Title).ToHashSet();
                     break;
                 case "Priority":
@@ -90,14 +107,14 @@ namespace AdvancedC_Final.Controllers
                     break;
                 default:
                     tickets = tickets.OrderBy(t => t.Title).ToHashSet();
-                    break;   
+                    break;
             }
             project.Tickets = tickets;
 
             int pageNumber = page ?? 1;
             IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 10);
 
-            var viewModel = new TicketPageVM
+            TicketPageVM viewModel = new TicketPageVM
             {
                 Project = project,
                 Tickets = onePage
@@ -229,7 +246,7 @@ namespace AdvancedC_Final.Controllers
             {
                 _context.Projects.Remove(project);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -369,7 +386,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateTicketIsCompleted(int id)
+        public IActionResult UpdateTicketIsCompleted(int id, string? prevView)
         {
             Ticket? ticket = _context.Tickets.FirstOrDefault(t => t.Id == id);
 
@@ -380,12 +397,17 @@ namespace AdvancedC_Final.Controllers
                 _context.SaveChanges();
             }
 
+            if (prevView == "details")
+            {
+                return RedirectToAction(nameof(Details), new { id = ticket.ProjectId });
+            }
+
             return RedirectToAction(nameof(DetailTicket), new { id = id });
         }
 
         private bool ProjectExists(int id)
         {
-          return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

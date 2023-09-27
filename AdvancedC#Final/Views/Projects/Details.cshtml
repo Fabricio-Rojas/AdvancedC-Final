@@ -48,7 +48,14 @@
                     <td>@ticket.Title</td>
                     <td>@ticket.Priority</td>
                     <td>@ticket.RequiredHours</td>
-                    <td>@ticket.IsCompleted</td>
+                    <td>
+                        <form asp-action="UpdateTicketIsCompleted" method="post">
+                            <input type="hidden" name="id" value="@ticket.Id" />
+                            <input type="hidden" name="prevView" value="details" />
+                            <input type="checkbox" id="IsCompleted" onchange="this.form.submit()" @(ticket.IsCompleted ? "checked" : "") />
+                            <label for="IsCompleted">@ticket.IsCompleted</label>
+                        </form>
+                    </td>
                     <td>
                         <a asp-action="DetailTicket" asp-route-id="@ticket.Id">Details</a> 
                         @if (User.IsInRole("Project Manager"))

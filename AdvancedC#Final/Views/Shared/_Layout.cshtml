@@ -29,7 +29,7 @@
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            if (User.IsInRole("Project Manager"))
+                            if (User.IsInRole("Project Manager") || User.IsInRole("Developer"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Projects</a>
