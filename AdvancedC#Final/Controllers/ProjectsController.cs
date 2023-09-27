@@ -15,6 +15,7 @@ using System.Net.NetworkInformation;
 using X.PagedList.Mvc.Core;
 using X.PagedList;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AdvancedC_Final.Controllers
 {
@@ -36,7 +37,7 @@ namespace AdvancedC_Final.Controllers
         {
             var taskManagerContext = _context.Projects.Include(p => p.ProjectManager);
 
-            int pageNumber = (page ?? 1);
+            int pageNumber = page ?? 1;
             var onePage = taskManagerContext.ToPagedList(pageNumber, 10);
 
             ViewBag.onePage = onePage;
@@ -44,7 +45,7 @@ namespace AdvancedC_Final.Controllers
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id, string sortOrder)
+        public async Task<IActionResult> Details(int? id, string sortOrder, int? page)
         {
             if (id == null || _context.Projects == null)
             {
@@ -68,7 +69,7 @@ namespace AdvancedC_Final.Controllers
 
             ViewBag.TitleSortParm = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
-            ViewBag.HoursSortParm = sortOrder == "Hours" ? "hours_desc" : "Hours";
+            ViewBag.HoursSortParm = sortOrder == "Required Hours" ? "hours_desc" : "Hours";
 
             switch (sortOrder)
             {
@@ -89,9 +90,20 @@ namespace AdvancedC_Final.Controllers
                     break;
                 default:
                     tickets = tickets.OrderBy(t => t.Title).ToHashSet();
-                    break;
+                    break;   
             }
-            return View(project);
+            project.Tickets = tickets;
+
+            int pageNumber = page ?? 1;
+            IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 3);
+
+            var viewModel = new TicketPageVM
+            {
+                Project = project,
+                Tickets = onePage
+            };
+
+            return View(viewModel);
         }
 
         // GET: Projects/Create

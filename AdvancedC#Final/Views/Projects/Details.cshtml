@@ -1,5 +1,8 @@
 ﻿@using AdvancedC_Final.Areas.Identity.Data;
-@model AdvancedC_Final.Models.Project
+@using X.PagedList.Mvc;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model AdvancedC_Final.Models.TicketPageVM;
 
 @{
     ViewData["Title"] = "Details";
@@ -13,16 +16,16 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Project.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Project.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectManager)
+            @Html.DisplayNameFor(model => model.Project.ProjectManager)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProjectManager.UserName)
+            @Html.DisplayFor(model => model.Project.ProjectManager.UserName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Tickets)
@@ -41,7 +44,7 @@
             <tr>
                 <th>@Html.ActionLink("Title", "Details", new { sortOrder = ViewBag.TitleSortParm })</th>
                 <th>@Html.ActionLink("Priority", "Details", new { sortOrder = ViewBag.PrioritySortParm })</th>
-                <th>@Html.ActionLink("Hours", "Details", new { sortOrder = ViewBag.HoursSortParm })</th>
+                <th>@Html.ActionLink("Required Hours", "Details", new { sortOrder = ViewBag.HoursSortParm })</th>
                 <th>Completed</th>
                 <th></th>
             </tr>
@@ -59,6 +62,9 @@
             }
         </tbody>
     </table>
+    Page @(Model.Tickets.PageCount < Model.Tickets.PageNumber ? 0 : Model.Tickets.PageNumber) of @Model.Tickets.PageCount
+
+    @Html.PagedListPager( Model.Tickets, page => Url.Action("Details", new { id = Model.Project.Id, page }))
 </div>
 
 <div>
@@ -70,7 +76,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (DeveloperProject developer in Model.Developers)
+            @foreach (DeveloperProject developer in Model.Project.Developers)
             {
                 <tr>
                     <td>@developer.Developer.UserName</td>
@@ -81,8 +87,8 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-controller="Projects" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="AddDevProject" asp-controller="Manager" asp-route-id="@Model?.Id">Add a Developer</a> |
-    <a asp-action="AddTicket" asp-controller="Projects" asp-route-id="@Model?.Id">Add a Ticket</a> |
+    <a asp-action="Edit" asp-controller="Projects" asp-route-id="@Model?.Project.Id">Edit</a> |
+    <a asp-action="AddDevProject" asp-controller="Manager" asp-route-id="@Model?.Project.Id">Add a Developer</a> |
+    <a asp-action="AddTicket" asp-controller="Projects" asp-route-id="@Model?.Project.Id">Add a Ticket</a> |
     <a asp-action="Index" asp-controller="Projects" >Back to List</a>
 </div>
