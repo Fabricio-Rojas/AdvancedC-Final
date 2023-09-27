@@ -9,27 +9,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Project</h4>
+    <h4>Project Details</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.Title)
-        </dt>
+        <dt class = "col-sm-2">Title:</dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Project.Title)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.ProjectManager)
-        </dt>
+        <dt class = "col-sm-2">Project Manager:</dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Project.ProjectManager.UserName)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tickets)
-        </dt>
+        <dt class="col-sm-2">Tickets:</dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Tickets.Count)
         </dd>
