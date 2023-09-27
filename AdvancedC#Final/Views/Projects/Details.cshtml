@@ -37,7 +37,7 @@
                 <th>@Html.ActionLink("Title", "Details", new { sortOrder = ViewBag.TitleSortParm })</th>
                 <th>@Html.ActionLink("Priority", "Details", new { sortOrder = ViewBag.PrioritySortParm })</th>
                 <th>@Html.ActionLink("Required Hours", "Details", new { sortOrder = ViewBag.HoursSortParm })</th>
-                <th>Completed</th>
+                <th>@Html.ActionLink("Completed", "Details", new { sortOrder = ViewBag.CompletionFilter })</th>
                 <th></th>
             </tr>
         </thead>
@@ -52,8 +52,8 @@
                         <form asp-action="UpdateTicketIsCompleted" method="post">
                             <input type="hidden" name="id" value="@ticket.Id" />
                             <input type="hidden" name="prevView" value="details" />
-                            <input type="checkbox" id="IsCompleted" onchange="this.form.submit()" @(ticket.IsCompleted ? "checked" : "") />
-                            <label for="IsCompleted">@ticket.IsCompleted</label>
+                            <input type="checkbox" onchange="this.form.submit()" @(ticket.IsCompleted ? "checked" : "") />
+                            <label>@ticket.IsCompleted</label>
                         </form>
                     </td>
                     <td>

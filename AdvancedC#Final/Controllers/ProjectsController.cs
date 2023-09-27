@@ -84,6 +84,7 @@ namespace AdvancedC_Final.Controllers
             ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
             ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
             ViewBag.HoursSortParm = sortOrder == "Hours" ? "hours_desc" : "Hours";
+            ViewBag.CompletionFilter = sortOrder == "False" ? "" : "False";
 
             switch (sortOrder)
             {
@@ -104,6 +105,9 @@ namespace AdvancedC_Final.Controllers
                     break;
                 case "hours_desc":
                     tickets = tickets.OrderByDescending(t => t.RequiredHours).ToHashSet();
+                    break;
+                case "False":
+                    tickets = tickets.Where(t => t.IsCompleted == false).ToHashSet();
                     break;
                 default:
                     tickets = tickets.OrderBy(t => t.Title).ToHashSet();
