@@ -1,4 +1,5 @@
 ﻿@model AdvancedC_Final.Models.Project
+@using AdvancedC_Final.Areas.Identity.Data
 
 @{
     ViewData["Title"] = "Create";
@@ -22,8 +23,16 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-            @Html.LabelFor(model => model.Developers)
-            @Html.ListBox("Developers", ViewBag.Developers as MultiSelectList)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Developers)
+                <select class="form-select w-100 m-2" name="DeveloperIds" multiple>
+                    <option value="">- Select a Developer -</option>
+                    @foreach (TaskManagerUser user in ViewBag.Developers)
+                    {
+                        <option value="@user.Id">@user.UserName</option>
+                    }
+                </select>
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
