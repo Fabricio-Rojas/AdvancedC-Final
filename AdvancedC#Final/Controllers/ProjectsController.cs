@@ -85,6 +85,7 @@ namespace AdvancedC_Final.Controllers
             ViewBag.PrioritySortParm = sortOrder == "Priority" ? "priority_desc" : "Priority";
             ViewBag.HoursSortParm = sortOrder == "Hours" ? "hours_desc" : "Hours";
             ViewBag.CompletionFilter = sortOrder == "False" ? "" : "False";
+            ViewBag.CurrentSort = sortOrder;
 
             switch (sortOrder)
             {
@@ -116,7 +117,9 @@ namespace AdvancedC_Final.Controllers
             project.Tickets = tickets;
 
             int pageNumber = page ?? 1;
-            IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 10);
+            IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 3);
+
+            ViewBag.CurrentPage = pageNumber;
 
             TicketPageVM viewModel = new TicketPageVM
             {
@@ -390,7 +393,7 @@ namespace AdvancedC_Final.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateTicketIsCompleted(int id, string? prevView)
+        public IActionResult UpdateTicketIsCompleted(int id, string? prevView, string? sortOrder, int? page)
         {
             Ticket? ticket = _context.Tickets.FirstOrDefault(t => t.Id == id);
 
@@ -403,7 +406,7 @@ namespace AdvancedC_Final.Controllers
 
             if (prevView == "details")
             {
-                return RedirectToAction(nameof(Details), new { id = ticket.ProjectId });
+                return RedirectToAction(nameof(Details), new { id = ticket.ProjectId, sortOrder = sortOrder, page = page });
             }
 
             return RedirectToAction(nameof(DetailTicket), new { id = id });

@@ -34,10 +34,10 @@
     <table>
         <thead>
             <tr>
-                <th>@Html.ActionLink("Title", "Details", new { sortOrder = ViewBag.TitleSortParm })</th>
-                <th>@Html.ActionLink("Priority", "Details", new { sortOrder = ViewBag.PrioritySortParm })</th>
-                <th>@Html.ActionLink("Required Hours", "Details", new { sortOrder = ViewBag.HoursSortParm })</th>
-                <th>@Html.ActionLink("Completed", "Details", new { sortOrder = ViewBag.CompletionFilter })</th>
+                <th>@Html.ActionLink("Title", "Details", new { id = Model.Project.Id, sortOrder = ViewBag.TitleSortParm, page = ViewBag.CurrentPage })</th>
+                <th>@Html.ActionLink("Priority", "Details", new { id = Model.Project.Id, sortOrder = ViewBag.PrioritySortParm, page = ViewBag.CurrentPage })</th>
+                <th>@Html.ActionLink("Required Hours", "Details", new { id = Model.Project.Id, sortOrder = ViewBag.HoursSortParm, page = ViewBag.CurrentPage })</th>
+                <th>@Html.ActionLink("Completed", "Details", new { id = Model.Project.Id, sortOrder = ViewBag.CompletionFilter, page = ViewBag.CurrentPage })</th>
                 <th></th>
             </tr>
         </thead>
@@ -52,6 +52,8 @@
                         <form asp-action="UpdateTicketIsCompleted" method="post">
                             <input type="hidden" name="id" value="@ticket.Id" />
                             <input type="hidden" name="prevView" value="details" />
+                            <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
+                            <input type="hidden" name="page" value="@ViewBag.CurrentPage" />
                             <input type="checkbox" onchange="this.form.submit()" @(ticket.IsCompleted ? "checked" : "") />
                             <label>@ticket.IsCompleted</label>
                         </form>
@@ -71,7 +73,7 @@
     </table>
     Page @(Model.Tickets.PageCount < Model.Tickets.PageNumber ? 0 : Model.Tickets.PageNumber) of @Model.Tickets.PageCount
 
-    @Html.PagedListPager( Model.Tickets, page => Url.Action("Details", new { id = Model.Project.Id, page }))
+    @Html.PagedListPager( Model.Tickets, page => Url.Action("Details", new { id = Model.Project.Id, page = page, sortOrder = ViewBag.CurrentSort }))
 </div>
 
 <div>
