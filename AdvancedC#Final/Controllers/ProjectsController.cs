@@ -117,7 +117,7 @@ namespace AdvancedC_Final.Controllers
             project.Tickets = tickets;
 
             int pageNumber = page ?? 1;
-            IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 3);
+            IPagedList<Ticket> onePage = tickets.ToPagedList(pageNumber, 10);
 
             ViewBag.CurrentPage = pageNumber;
 

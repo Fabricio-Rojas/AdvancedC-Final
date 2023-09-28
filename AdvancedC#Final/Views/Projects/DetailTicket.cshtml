@@ -46,7 +46,7 @@
     <table>
         <thead>
             <tr>
-                <th>Developer</th>
+                <th>Developers</th>
             </tr>
         </thead>
         <tbody>
@@ -61,7 +61,7 @@
 </div>
 
 <div>
-    <a asp-action="AddDevTicket" asp-controller="Manager" asp-route-id="@Model?.Id">Add a Developer</a> |
+    <a asp-action="AddDevTicket" asp-controller="Manager" asp-route-ticketId="@Model?.Id" asp-route-projectId="@Model.ProjectId">Add a Developer</a> |
     <a asp-action="Details" asp-controller="Projects" asp-route-id="@Model?.ProjectId">Back to Project</a> 
     @if (User.IsInRole("Project Manager"))
     {
