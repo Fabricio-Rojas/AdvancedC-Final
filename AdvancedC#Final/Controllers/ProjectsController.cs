@@ -133,16 +133,20 @@ namespace AdvancedC_Final.Controllers
         // GET: Projects/Create
 
         [Authorize(Roles = "Project Manager")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             TaskManagerUser? loggedIn = _context.Users.FirstOrDefault(u => User.Identity.Name == u.UserName);
             string currentUserId = loggedIn.Id;
+
+            List<TaskManagerUser> developers = (List<TaskManagerUser>)await _userManager.GetUsersInRoleAsync("Developer");
+
+            ViewBag.Developers = developers;
 
             Project model = new Project()
             {
                 ProjectManagerId = currentUserId
             };
-
+            
             return View(model);
         }
 
@@ -151,15 +155,33 @@ namespace AdvancedC_Final.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Project Manager")]
-        public async Task<IActionResult> Create([Bind("Id,Title,ProjectManagerId")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,Title,ProjectManagerId")] Project project, List<string> DeveloperIds)
         {
             if (ModelState.IsValid)
             {
+                foreach (string devId in DeveloperIds)
+                {
+                    TaskManagerUser? user = _context.Users.FirstOrDefault(u =>  u.Id == devId);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+
+                    DeveloperProject developerProject = new DeveloperProject
+                    {
+                        Developer = user,
+                        DeveloperId = devId,
+                        Project = project,
+                        ProjectId = project.Id
+                    };
+
+                    project.Developers.Add(developerProject);
+                }
+
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectManagerId"] = new SelectList(_context.Users, "Id", "Id", project.ProjectManagerId);
             return View(project);
         }
 
