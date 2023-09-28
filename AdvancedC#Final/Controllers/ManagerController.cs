@@ -100,7 +100,7 @@ namespace AdvancedC_Final.Controllers
                 return NotFound();
             }
 
-            Ticket? ticket = await _context.Tickets.FirstOrDefaultAsync(m => m.Id == ticketId);
+            Ticket? ticket = await _context.Tickets.Include(t => t.Developers).ThenInclude(dt => dt.User).FirstOrDefaultAsync(m => m.Id == ticketId);
             Project? project = await _context.Projects.Include(p => p.Developers).ThenInclude(dp => dp.Developer).FirstOrDefaultAsync(m => m.Id == projectId);
 
             if (ticket == null || project == null)
@@ -109,8 +109,17 @@ namespace AdvancedC_Final.Controllers
             }
 
             List<DeveloperProject> developers = project.Developers.ToList();
+            List<DeveloperProject> correctedDevelopers = new List<DeveloperProject>();
 
-            ViewBag.Developers = developers;
+            foreach (DeveloperProject dp in developers)
+            {
+                if (!ticket.Developers.Any(d => d.UserId == dp.DeveloperId))
+                {
+                    correctedDevelopers.Add(dp);
+                }
+            }
+
+            ViewBag.Developers = correctedDevelopers;
 
             DeveloperTicket developerTicket = new DeveloperTicket
             {
